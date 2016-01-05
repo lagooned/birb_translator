@@ -1,0 +1,40 @@
+#!/usr/bin/env ruby
+require 'uri'
+
+HASHTAG = '#birb2016'
+URL = 'probirdrights.com'
+
+# populate wordlist
+$words = {}
+File.open('bwords.txt') do |file|
+    file.each do |line|
+        key, value = line.chomp.split(' ', 2)
+        $words[key] = value 
+    end
+end
+
+# translate to birb
+birb = ''
+ARGV.each do |x|
+    x.split(/(?=[\?\.!,])/, 2).each do |y|
+        if not y.nil?
+            temp = y.gsub(/'.+/, '')
+            if $words.has_key?(temp)
+                temp = $words[temp]
+            elsif $words.has_key?(temp.gsub(/s$/, ''))
+                temp = $words[temp.gsub(/s$/, '')] + 's'
+            end
+        end
+    
+        #replace hashtags and urls
+        temp = HASHTAG if temp =~ /^#/
+        temp = URL if temp =~ URI.regexp 
+        birb += temp 
+    end
+    birb += ' '
+end
+
+birb.gsub!('?', '???')
+birb.gsub!('!', '!!!')
+birb.gsub!('"', '"""')
+puts birb
