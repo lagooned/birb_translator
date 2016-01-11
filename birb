@@ -13,9 +13,17 @@ File.open('bwords.txt') do |file|
     end
 end
 
+# enable or disable string mode
+args = []
+if ARGV.first == '-s'
+    args = ARGV[1].split(' ')
+else 
+    ARGV.each do |x| args << x end
+end
+
 # translate to birb
 birb = ''
-ARGV.each do |x|
+args.each do |x|
     x.split(/(?=[\?\.!,])/, 2).each do |y|
         if not y.nil?
             temp = y.gsub(/'.+/, '')
